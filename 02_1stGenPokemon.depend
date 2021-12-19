@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1639880888 source:/home/riccardo/Desktop/Programmazione/02_1stGenPokemon/main.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+
