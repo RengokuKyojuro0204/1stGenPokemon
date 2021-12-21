@@ -1,6 +1,68 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
+#define MAX_IV_VALUE 15
+#define LEVEL 5
+#define BASE_HP 250
+#define BASE_ATK 5
+#define BASE_DEF 5
+#define BASE_SPD 50
+#define BASE_SP 105
+
+void calcolo_degli_iv_di_chansey(int*iv)
+{
+    int hp_iv = 0;
+    int atk_iv = 0;
+    int def_iv = 0;
+    int spd_iv = 0;
+    int sp_iv = 0;
+
+    time_t t;
+
+    srand((unsigned) time(&t));
+
+    atk_iv = rand() / (RAND_MAX / MAX_IV_VALUE + 1);
+    def_iv = rand() / (RAND_MAX / MAX_IV_VALUE + 1);
+    spd_iv = rand() / (RAND_MAX / MAX_IV_VALUE + 1);
+    sp_iv = rand() / (RAND_MAX / MAX_IV_VALUE + 1);
+
+    hp_iv = (atk_iv&1) *pow(2, 3) + (def_iv&1)*pow(2, 2) + (spd_iv&1)*pow(2, 1) + (sp_iv&1);
+
+    *iv = hp_iv;
+    *(iv+1) = atk_iv;
+    *(iv+2) = def_iv;
+    *(iv+3) = spd_iv;
+    *(iv+4) = sp_iv;
+}
+
+void stampa_gli_iv_di_chansey(int hp_iv, int atk_iv, int def_iv, int spd_iv, int sp_iv)
+{
+    printf("Gli Iv dei punti salute sono %d\n", hp_iv);
+    printf("Gli Iv dell'attacco sono %d\n", atk_iv);
+    printf("Gli Iv della difesa %d\n", def_iv);
+    printf("Gli Iv della velocita'  sono %d\n", spd_iv);
+    printf("Gli Iv degli speciali sono %d\n",sp_iv);
+}
+
+void calcolo_delle_stats_di_chansey(int*stats, int hp_iv, int atk_iv, int def_iv, int spd_iv, int sp_iv)
+{
+    *stats = floor((((BASE_HP + hp_iv) * 2) * LEVEL) / 100) + LEVEL + 10;
+    *(stats+1)= floor((((BASE_ATK + atk_iv) * 2) * LEVEL) / 100) + 5;
+    *(stats+2)= floor((((BASE_DEF + def_iv) * 2) * LEVEL) / 100) + 5;
+    *(stats+3)= floor((((BASE_SPD + spd_iv) * 2) * LEVEL) / 100) + 5;
+    *(stats+4)= floor((((BASE_SP + sp_iv) * 2) * LEVEL) / 100) + 5;
+}
+
+void stampa_le_statistiche_finali_di_chansey(int hp, int atk, int def, int spd, int sp)
+{
+    printf("I punti salute di Chansey sono %d\n", hp);
+    printf("L'attacco di Chansey e' %d\n", atk);
+    printf("La difesa di Chansey e' %d\n", def);
+    printf("La velocita' di Chansey e' %d\n", spd);
+    printf("Gli speciali di Chansey sono %d\n", sp);
+
+}
 
 int main()
 {
@@ -13,13 +75,11 @@ int main()
         int sp;
     } pokemon;
 
-    //Base per creare un allenatore (utilizzare una struct dentro un'altra struct
-    /*struct Trainer {
-        char name[50];
-        Pokemon team[6]
-        }*/
-
-    time_t t;
+    int hp_iv = 0;
+    int atk_iv = 0;
+    int def_iv = 0;
+    int spd_iv = 0;
+    int sp_iv = 0;
 
     int hp = 0;
     int atk = 0;
@@ -27,54 +87,34 @@ int main()
     int spd = 0;
     int sp = 0;
 
-    int max_iv_value = 15;
+    int iv[5];
 
-    srand((unsigned) time(&t));
+    calcolo_degli_iv_di_chansey(&(iv[0]));
+    hp_iv = iv[0];
+    atk_iv = iv[1];
+    def_iv = iv[2];
+    spd_iv = iv[3];
+    sp_iv = iv[4];
 
-    int hp_iv = 0;
-    int atk_iv = rand() / (RAND_MAX / max_iv_value + 1);
-    int def_iv = rand() / (RAND_MAX / max_iv_value + 1);
-    int spd_iv = rand() / (RAND_MAX / max_iv_value + 1);
-    int sp_iv = rand() / (RAND_MAX / max_iv_value + 1);
+    stampa_gli_iv_di_chansey(hp_iv, atk_iv, def_iv, spd_iv, sp_iv);
 
-    int a[4];
+    int stats[5];
 
-    a[0] = atk_iv & 1;
-    a[1] = def_iv & 1;
-    a[2] = spd_iv & 1;
-    a[3] = sp_iv & 1;
+    calcolo_delle_stats_di_chansey(&(stats[0]), hp_iv, atk_iv, def_iv, spd_iv, sp_iv);
 
-    hp_iv = a[0]*pow(2, 3) + a[1]*pow(2, 2) + a[2]*pow(2, 1) + a[3];
+    hp = stats[0];
+    atk = stats[1];
+    def = stats[2];
+    spd = stats[3];
+    sp = stats[4];
 
-    printf("Gli Iv dei punti salute sono %d\n", hp_iv);
-    printf("Gli Iv dell'attacco sono %d\n", atk_iv);
-    printf("Gli Iv della difesa %d\n", def_iv);
-    printf("Gli Iv della velocita'  sono %d\n", spd_iv);
-    printf("Gli Iv degli speciali sono %d\n",sp_iv);
+    pokemon.hp = hp;
+    pokemon.atk = atk;
+    pokemon.def = def;
+    pokemon.spd = spd;
+    pokemon.sp = sp;
 
-    int level = 5;
-    int base_hp = 250;
-    int base_atk = 5;
-    int base_def = 5;
-    int base_spd = 50;
-    int base_sp = 105;
-
-
-    pokemon.hp = floor((((base_hp + hp_iv) * 2) * level) / 100) + level + 10;
-    pokemon.atk = floor((((base_atk + atk_iv) * 2) * level) / 100) + 5;
-    pokemon.def = floor((((base_def + def_iv) * 2) * level) / 100) + 5;
-    pokemon.spd = floor((((base_spd + spd_iv) * 2) * level) / 100) + 5;
-    pokemon.sp = floor((((base_sp + sp_iv) * 2) * level) / 100) + 5;
-
-    printf("I punti salute di Chansey sono %d\n", pokemon.hp);
-    printf("L'attacco di Chansey e' %d\n", pokemon.atk);
-    printf("La difesa di Chansey e' %d\n", pokemon.def);
-    printf("La velocita' di Chansey e' %d\n", pokemon.spd);
-    printf("Gli speciali di Chansey sono %d\n", pokemon.sp);
-
-
-
-
+    stampa_le_statistiche_finali_di_chansey( pokemon.hp, pokemon.atk, pokemon.def, pokemon.spd, pokemon.sp);
 
     return 0;
 }
