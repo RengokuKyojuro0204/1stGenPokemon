@@ -10,6 +10,15 @@
 #define BASE_SPD 50
 #define BASE_SP 105
 
+struct Pokemon {
+        char species[20];
+        int hp;
+        int atk;
+        int def;
+        int spd;
+        int sp;
+    };
+
 void calcolo_degli_iv_di_chansey(int*iv)
 {
     int hp_iv = 0;
@@ -45,13 +54,13 @@ void stampa_gli_iv_di_chansey(int hp_iv, int atk_iv, int def_iv, int spd_iv, int
     printf("Gli Iv degli speciali sono %d\n",sp_iv);
 }
 
-void calcolo_delle_stats_di_chansey(int*stats, int hp_iv, int atk_iv, int def_iv, int spd_iv, int sp_iv)
+void calcolo_delle_stats_di_chansey( int hp_iv, int atk_iv, int def_iv, int spd_iv, int sp_iv, struct Pokemon* pokemon)
 {
-    *stats = floor((((BASE_HP + hp_iv) * 2) * LEVEL) / 100) + LEVEL + 10;
-    *(stats+1)= floor((((BASE_ATK + atk_iv) * 2) * LEVEL) / 100) + 5;
-    *(stats+2)= floor((((BASE_DEF + def_iv) * 2) * LEVEL) / 100) + 5;
-    *(stats+3)= floor((((BASE_SPD + spd_iv) * 2) * LEVEL) / 100) + 5;
-    *(stats+4)= floor((((BASE_SP + sp_iv) * 2) * LEVEL) / 100) + 5;
+    pokemon->hp = floor((((BASE_HP + hp_iv) * 2) * LEVEL) / 100) + LEVEL + 10;
+    pokemon->atk = floor((((BASE_ATK + atk_iv) * 2) * LEVEL) / 100) + 5;
+    pokemon->def =floor((((BASE_DEF + def_iv) * 2) * LEVEL) / 100) + 5;
+    pokemon->spd = floor((((BASE_SPD + spd_iv) * 2) * LEVEL) / 100) + 5;
+    pokemon->sp = floor((((BASE_SP + sp_iv) * 2) * LEVEL) / 100) + 5;
 }
 
 void stampa_le_statistiche_finali_di_chansey(int hp, int atk, int def, int spd, int sp)
@@ -66,26 +75,13 @@ void stampa_le_statistiche_finali_di_chansey(int hp, int atk, int def, int spd, 
 
 int main()
 {
-    struct Pokemon {
-        char species[20];
-        int hp;
-        int atk;
-        int def;
-        int spd;
-        int sp;
-    } pokemon;
+    struct Pokemon pokemon;
 
     int hp_iv = 0;
     int atk_iv = 0;
     int def_iv = 0;
     int spd_iv = 0;
     int sp_iv = 0;
-
-    int hp = 0;
-    int atk = 0;
-    int def = 0;
-    int spd = 0;
-    int sp = 0;
 
     int iv[5];
 
@@ -98,21 +94,7 @@ int main()
 
     stampa_gli_iv_di_chansey(hp_iv, atk_iv, def_iv, spd_iv, sp_iv);
 
-    int stats[5];
-
-    calcolo_delle_stats_di_chansey(&(stats[0]), hp_iv, atk_iv, def_iv, spd_iv, sp_iv);
-
-    hp = stats[0];
-    atk = stats[1];
-    def = stats[2];
-    spd = stats[3];
-    sp = stats[4];
-
-    pokemon.hp = hp;
-    pokemon.atk = atk;
-    pokemon.def = def;
-    pokemon.spd = spd;
-    pokemon.sp = sp;
+    calcolo_delle_stats_di_chansey( hp_iv, atk_iv, def_iv, spd_iv, sp_iv, &(pokemon));
 
     stampa_le_statistiche_finali_di_chansey( pokemon.hp, pokemon.atk, pokemon.def, pokemon.spd, pokemon.sp);
 
